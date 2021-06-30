@@ -1,4 +1,3 @@
-import sys
 import csv
 import pyodbc
 from timeit import default_timer as timer
@@ -6,15 +5,10 @@ from timeit import default_timer as timer
 start = timer()
 params = []
 # Connect to the database
-connection = pyodbc.connect('Driver={SQL Server};Server=5.79.11.132;Database=pmix;uid=sa;pwd=M@rk3tI.1999')   
-
-
+connection = pyodbc.connect('Driver={SQL Server};Server=5.79.11.132;Database=pmix;uid=sa;pwd=M@rk3tI.1999')
 # Get the cursor, which is used to traverse the database, line by line
 cursor = connection.cursor()
-
 # Using cursor to create database
-#cursor.execute("DROP DATABASE insight")
-#cursor.execute("CREATE DATABASE insight")
 cursor.execute("USE pmix")
 
 # Create Tables
@@ -35,7 +29,6 @@ EMPLOYEE_MEAL VARCHAR(255) ,\
 MANAGER_MEAL VARCHAR(255) ,\
 UNITS_DISCOUNT VARCHAR(255) \
 )")
-
 
 count = 0
 # Create the INSERT INTO sql query
@@ -78,27 +71,17 @@ with open('PMX-2021.txt', newline = '', encoding='ISO-8859-1') as pmx_csv:
         UNITS_PROMO, UNITS_WASTE,
         EMPLOYEE_MEAL, MANAGER_MEAL,
         UNITS_DISCOUNT)
-        # Execute sql Querys
-        insert_query = str(query) + str(values)
-        #cursor.execute(query,values)    
-        params.append(values);
-        # cursor.fast_executemany = False
-        # cursor.executemany(query,values)  
-        # count = count + 1
-        # if count == 200: 
-        #     break
-
+        params.append(values)
+        
 print(start)
+# Execute sql Querys
 cursor.fast_executemany = True
-cursor.executemany(query,params)  
-
-
+cursor.executemany(query,params)
 # Close the cursor
 cursor.close()
 # Commit the transaction
 connection.commit()
 # Close the database connection
 connection.close()
-
 end = timer()
 print(end - start)  # Time in seconds, e.g. 5.38091952400282
